@@ -1,0 +1,172 @@
+.password-container {
+  min-height: 100vh;
+  background: #7c5a4a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.3rem;
+}
+
+.password-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.password-title {
+  color: #bc792b;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+.password-subtitle {
+  color: #888;
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.password-label {
+  color: #222;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  align-self: flex-start;
+}
+
+.password-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #888;
+  font-size: 1rem;
+  margin-bottom: 1.7rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.password-button {
+  background: #bc792b;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 0.8rem 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background 0.2s;
+}
+
+.password-button:hover {
+  background: #a8641f;
+}
+
+.password-error {
+  color: #b00020;
+  background: #ffeaea;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.password-success {
+  color: #2e7d32;
+  background: #eaffea;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Responsivo para celulares tamaño M */
+@media (max-width: 30rem) {
+  .password-card {
+      max-width: 98vw !important;
+      padding: 2rem 2rem !important;
+  }
+  .password-title {
+      font-size: 1.7rem !important;
+  }
+  .password-subtitle {
+      font-size: 1rem !important;
+  }
+  .password-input {
+      font-size: 1rem !important;
+      width: 100% !important;
+  }
+  .password-label {
+      font-size: 1rem !important;
+  }
+  .password-button {
+      font-size: 1rem !important;
+      padding: 0.7rem 0 !important;
+      margin-top: 2rem;
+  }
+}
+
+/* Responsivo para celulares tamaño S */
+@media (max-width: 22.5rem) {
+  .password-card {
+      padding: 1rem 0.3rem !important;
+  }
+  .password-title {
+      font-size: 1.1rem !important;
+  }
+  .password-subtitle {
+      font-size: 0.9rem !important;
+  }
+  .password-input {
+      max-width: 80%;
+      padding: 0.7rem;
+  }
+  .password-label {
+      font-size: 0.9rem !important;
+      padding-left: 2rem;
+  }
+  .password-button {
+      max-width: 80%;
+      font-size: 0.9rem !important;
+      padding: 0.6rem 0 !important;
+      margin-top: 2rem;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 51.25rem) {
+  .password-container {
+      padding: 2rem;
+  }
+  .password-card {
+      max-width: 32rem;
+      padding: 2.5rem 3rem;
+  }
+  .password-title {
+      font-size: 2.5rem;
+  }
+  .password-subtitle {
+      font-size: 1.3rem;
+  }
+  .password-label {
+      font-size: 1.2rem;
+  }
+  .password-button {
+      font-size: 1.15rem;
+      padding: 1rem 0;
+      margin-top: 3rem;
+  }
+}
