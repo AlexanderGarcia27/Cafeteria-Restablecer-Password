@@ -3,27 +3,37 @@ import Swal from 'sweetalert2';
 import "./App.css";
 
 export const Password = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+     const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+   const [confirmPassword, setConfirmPassword] = useState("");
+   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+       const handleSubmit = async (e) => {
+       e.preventDefault();
 
-    if (!email || !password || !confirmPassword) {
-      setError("Por favor, completa todos los campos.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden.");
-      return;
-    }
+           if (!email || !password || !confirmPassword) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Campos incompletos',
+           text: 'Por favor, completa todos los campos.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+         return;
+       }
+       
+       if (password !== confirmPassword) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Contraseñas no coinciden',
+           text: 'Las contraseñas no coinciden.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+         return;
+       }
 
     setLoading(true);
 
@@ -107,13 +117,27 @@ export const Password = () => {
         const errorText = await response.text();
         console.log('Error response text:', errorText);
 
-        try {
-          const errorData = JSON.parse(errorText);
-          setError(errorData.message || `Error ${response.status}: ${response.statusText}`);
-        } catch (parseError) {
-          setError(`Error ${response.status}: ${response.statusText || errorText}`);
-        }
-        return;
+                 try {
+           const errorData = JSON.parse(errorText);
+           Swal.fire({
+             icon: 'error',
+             iconColor: '#B78752',
+             title: 'Error del servidor',
+             text: errorData.message || `Error ${response.status}: ${response.statusText}`,
+             confirmButtonColor: '#B78752',
+             showConfirmButton: true
+           });
+         } catch (parseError) {
+           Swal.fire({
+             icon: 'error',
+             iconColor: '#B78752',
+             title: 'Error del servidor',
+             text: `Error ${response.status}: ${response.statusText || errorText}`,
+             confirmButtonColor: '#B78752',
+             showConfirmButton: true
+           });
+         }
+         return;
       }
 
       const data = await response.json();
@@ -127,7 +151,7 @@ export const Password = () => {
         text: 'Has cambiado tu contraseña exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.',
         confirmButtonColor: '#B78752',
         timer: 1500,
-        showConfirmButton: false
+        showConfirmButton: true
       });
 
       setEmail("");
@@ -139,17 +163,52 @@ export const Password = () => {
       console.error('Error name:', error.name);
       console.error('Error message:', error.message);
 
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        setError("Error de red: No se pudo conectar al servidor. El servidor puede estar caído o tener problemas de CORS.");
-      } else if (error.name === 'TypeError' && error.message.includes('JSON')) {
-        setError("Error en la respuesta del servidor. Inténtalo de nuevo.");
-      } else if (error.message.includes('CORS')) {
-        setError("Error de CORS: El servidor no permite peticiones desde este dominio.");
-      } else if (error.message.includes('Failed to fetch')) {
-        setError("Error de conexión: El servidor no responde. Puede estar caído o en mantenimiento.");
-      } else {
-        setError(`Error inesperado: ${error.message}`);
-      }
+             if (error.name === 'TypeError' && error.message.includes('fetch')) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Error de conexión',
+           text: 'No se pudo conectar al servidor. El servidor puede estar caído o tener problemas de CORS.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+       } else if (error.name === 'TypeError' && error.message.includes('JSON')) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Error del servidor',
+           text: 'Error en la respuesta del servidor. Inténtalo de nuevo.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+       } else if (error.message.includes('CORS')) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Error de CORS',
+           text: 'El servidor no permite peticiones desde este dominio.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+       } else if (error.message.includes('Failed to fetch')) {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Error de conexión',
+           text: 'El servidor no responde. Puede estar caído o en mantenimiento.',
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+       } else {
+         Swal.fire({
+           icon: 'error',
+           iconColor: '#B78752',
+           title: 'Error inesperado',
+           text: error.message,
+           confirmButtonColor: '#B78752',
+           showConfirmButton: true
+         });
+       }
     } finally {
       setLoading(false);
     }
@@ -188,8 +247,7 @@ export const Password = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
           />
-          {error && <div className="password-error">{error}</div>}
-          {success && <div className="password-success">{success}</div>}
+          
           <button
             type="submit"
             className="password-button"
