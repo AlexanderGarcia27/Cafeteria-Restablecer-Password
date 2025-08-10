@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from 'sweetalert2';
 import "./App.css";
 
 export const Password = () => {
@@ -7,8 +8,9 @@ export const Password = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       setError("");
       setSuccess("");
@@ -23,11 +25,44 @@ export const Password = () => {
         return;
       }
       
-      // Aquí iría la lógica para cambiar la contraseña
-      setSuccess("¡Contraseña cambiada exitosamente!");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      setLoading(true);
+      
+      try {
+        const response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Mostrar SweetAlert2 en lugar del mensaje de éxito
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'Se cambió tu contraseña correctamente',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#3085d6'
+          });
+          
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+        } else {
+          setError(data.message || "Error al cambiar la contraseña. Inténtalo de nuevo.");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError("Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo.");
+      } finally {
+        setLoading(false);
+      }
     };
   
     return (
@@ -65,7 +100,13 @@ export const Password = () => {
             />
             {error && <div className="password-error">{error}</div>}
             {success && <div className="password-success">{success}</div>}
-            <button type="submit" className="password-button">Cambiar contraseña</button>
+            <button 
+              type="submit" 
+              className="password-button" 
+              disabled={loading}
+            >
+              {loading ? "Cambiando contraseña..." : "Cambiar contraseña"}
+            </button>
           </form>
         </div>
       </div>
