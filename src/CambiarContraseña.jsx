@@ -31,37 +31,17 @@ export const Password = () => {
         console.log('Enviando petición a:', 'https://reservacion-citas.onrender.com/api/users/change-password');
         console.log('Datos enviados:', { email, password });
         
-        // Intentar primero con HTTPS
-        let response;
-        try {
-          response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify({
-              email: email,
-              password: password
-            })
-          });
-        } catch (httpsError) {
-          console.log('Error con HTTPS, intentando con HTTP:', httpsError);
-          // Si falla HTTPS, intentar con HTTP
-          response = await fetch('http://reservacion-citas.onrender.com/api/users/change-password', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify({
-              email: email,
-              password: password
-            })
-          });
-        }
+        // Petición simple y directa
+        const response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        });
         
         console.log('Respuesta recibida:', response);
         console.log('Status:', response.status);
@@ -96,21 +76,25 @@ export const Password = () => {
         setPassword("");
         setConfirmPassword("");
         
-      } catch (error) {
-        console.error('Error detallado:', error);
-        console.error('Error name:', error.name);
-        console.error('Error message:', error.message);
-        
-        if (error.name === 'TypeError' && error.message.includes('fetch')) {
-          setError("Error de red: No se pudo conectar al servidor. Verifica tu conexión a internet.");
-        } else if (error.name === 'TypeError' && error.message.includes('JSON')) {
-          setError("Error en la respuesta del servidor. Inténtalo de nuevo.");
-        } else {
-          setError(`Error inesperado: ${error.message}`);
-        }
-      } finally {
-        setLoading(false);
-      }
+             } catch (error) {
+         console.error('Error detallado:', error);
+         console.error('Error name:', error.name);
+         console.error('Error message:', error.message);
+         
+         if (error.name === 'TypeError' && error.message.includes('fetch')) {
+           setError("Error de red: No se pudo conectar al servidor. El servidor puede estar caído o tener problemas de CORS.");
+         } else if (error.name === 'TypeError' && error.message.includes('JSON')) {
+           setError("Error en la respuesta del servidor. Inténtalo de nuevo.");
+         } else if (error.message.includes('CORS')) {
+           setError("Error de CORS: El servidor no permite peticiones desde este dominio.");
+         } else if (error.message.includes('Failed to fetch')) {
+           setError("Error de conexión: El servidor no responde. Puede estar caído o en mantenimiento.");
+         } else {
+           setError(`Error inesperado: ${error.message}`);
+         }
+       } finally {
+         setLoading(false);
+       }
     };
   
     return (
