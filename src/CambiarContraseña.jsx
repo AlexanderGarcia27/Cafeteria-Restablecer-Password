@@ -28,38 +28,86 @@ export const Password = () => {
       setLoading(true);
       
       try {
-        const response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
-        });
+        console.log('Enviando petición a:', 'https://reservacion-citas.onrender.com/api/users/change-password');
+        console.log('Datos enviados:', { email, password });
+        
+        // Intentar primero con HTTPS
+        let response;
+        try {
+          response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+        } catch (httpsError) {
+          console.log('Error con HTTPS, intentando con HTTP:', httpsError);
+          // Si falla HTTPS, intentar con HTTP
+          response = await fetch('http://reservacion-citas.onrender.com/api/users/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+        }
+        
+        console.log('Respuesta recibida:', response);
+        console.log('Status:', response.status);
+        console.log('Status Text:', response.statusText);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.log('Error response text:', errorText);
+          
+          try {
+            const errorData = JSON.parse(errorText);
+            setError(errorData.message || `Error ${response.status}: ${response.statusText}`);
+          } catch (parseError) {
+            setError(`Error ${response.status}: ${response.statusText || errorText}`);
+          }
+          return;
+        }
         
         const data = await response.json();
+        console.log('Datos de respuesta:', data);
         
-        if (response.ok) {
-          // Mostrar SweetAlert2 en lugar del mensaje de éxito
-          Swal.fire({
-            title: '¡Éxito!',
-            text: 'Se cambió tu contraseña correctamente',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#3085d6'
-          });
-          
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-        } else {
-          setError(data.message || "Error al cambiar la contraseña. Inténtalo de nuevo.");
-        }
+        // Mostrar SweetAlert2 en lugar del mensaje de éxito
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Se cambió tu contraseña correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#3085d6'
+        });
+        
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        
       } catch (error) {
-        console.error('Error:', error);
-        setError("Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo.");
+        console.error('Error detallado:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          setError("Error de red: No se pudo conectar al servidor. Verifica tu conexión a internet.");
+        } else if (error.name === 'TypeError' && error.message.includes('JSON')) {
+          setError("Error en la respuesta del servidor. Inténtalo de nuevo.");
+        } else {
+          setError(`Error inesperado: ${error.message}`);
+        }
       } finally {
         setLoading(false);
       }
