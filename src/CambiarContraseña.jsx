@@ -31,17 +31,73 @@ export const Password = () => {
         console.log('Enviando petición a:', 'https://reservacion-citas.onrender.com/api/users/change-password');
         console.log('Datos enviados:', { email, password });
         
-        // Petición simple y directa
-        const response = await fetch('https://reservacion-citas.onrender.com/api/users/change-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
-        });
+        // Intentar múltiples proxies CORS
+        let response;
+        let lastError;
+        
+        // Opción 1: corsproxy.io
+        try {
+          const proxyUrl = 'https://corsproxy.io/?';
+          const targetUrl = 'https://reservacion-citas.onrender.com/api/users/change-password';
+          
+          response = await fetch(proxyUrl + targetUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+          console.log('Proxy 1 exitoso');
+        } catch (error1) {
+          console.log('Proxy 1 falló:', error1);
+          lastError = error1;
+          
+          // Opción 2: allorigins.win
+          try {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const targetUrl = encodeURIComponent('https://reservacion-citas.onrender.com/api/users/change-password');
+            
+            response = await fetch(proxyUrl + targetUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                email: email,
+                password: password
+              })
+            });
+            console.log('Proxy 2 exitoso');
+          } catch (error2) {
+            console.log('Proxy 2 falló:', error2);
+            lastError = error2;
+            
+            // Opción 3: cors-anywhere
+            try {
+              const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+              const targetUrl = 'https://reservacion-citas.onrender.com/api/users/change-password';
+              
+              response = await fetch(proxyUrl + targetUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Origin': window.location.origin
+                },
+                body: JSON.stringify({
+                  email: email,
+                  password: password
+                })
+              });
+              console.log('Proxy 3 exitoso');
+            } catch (error3) {
+              console.log('Proxy 3 falló:', error3);
+              throw lastError || error3;
+            }
+          }
+        }
         
         console.log('Respuesta recibida:', response);
         console.log('Status:', response.status);
