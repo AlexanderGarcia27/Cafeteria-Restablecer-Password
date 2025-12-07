@@ -38,7 +38,7 @@ export const Password = () => {
     setLoading(true);
 
     try {
-      console.log('Enviando petición a:', 'https://reservacion-citas.onrender.com/api/users/change-password');
+      console.log('Enviando petición a:', 'https://proyecto-cafeteria-lm3l.onrender.com/api/users/change-password');
       console.log('Datos enviados:', { email, password });
 
       // Intentar múltiples proxies CORS
@@ -48,7 +48,7 @@ export const Password = () => {
       // Opción 1: corsproxy.io
       try {
         const proxyUrl = 'https://corsproxy.io/?';
-        const targetUrl = 'https://reservacion-citas.onrender.com/api/users/change-password';
+        const targetUrl = 'https://proyecto-cafeteria-lm3l.onrender.com/api/users/change-password';
 
         response = await fetch(proxyUrl + targetUrl, {
           method: 'POST',
@@ -68,7 +68,7 @@ export const Password = () => {
         // Opción 2: allorigins.win
         try {
           const proxyUrl = 'https://api.allorigins.win/raw?url=';
-          const targetUrl = encodeURIComponent('https://reservacion-citas.onrender.com/api/users/change-password');
+          const targetUrl = encodeURIComponent('https://proyecto-cafeteria-lm3l.onrender.com/api/users/change-password');
 
           response = await fetch(proxyUrl + targetUrl, {
             method: 'POST',
@@ -88,7 +88,7 @@ export const Password = () => {
           // Opción 3: cors-anywhere
           try {
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = 'https://reservacion-citas.onrender.com/api/users/change-password';
+            const targetUrl = 'https://proyecto-cafeteria-lm3l.onrender.com/api/users/change-password';
 
             response = await fetch(proxyUrl + targetUrl, {
               method: 'POST',
